@@ -85,7 +85,7 @@ public class ArrayStorage {
      */
     private int indexOf(String uuid) {
         return IntStream.range(0, size)
-                .filter(i -> storage[i].toString().equals(uuid))
+                .filter(i -> storage[i].uuid.equals(uuid))
                 .findAny()
                 .orElse(-1);
     }
