@@ -19,8 +19,8 @@ public class ArrayStorage {
      * Removes all of the resumes from this storage.
      */
     void clear() {
-        Arrays.fill(this.storage, 0, this.size, null);
-        this.size = 0;
+        Arrays.fill(storage, 0, size, null);
+        size = 0;
     }
 
     /**
@@ -29,7 +29,7 @@ public class ArrayStorage {
      * @param resume resume to be appended to this storage
      */
     void save(Resume resume) {
-        this.storage[this.size++] = resume;
+        storage[size++] = resume;
     }
 
     /**
@@ -40,8 +40,8 @@ public class ArrayStorage {
      * or <tt>null</tt> if there was no resume for <tt>uuid</tt>
      */
     Resume get(String uuid) {
-        int index = this.indexOf(uuid);
-        return index != -1 ? this.storage[index] : null;
+        int index = indexOf(uuid);
+        return index != -1 ? storage[index] : null;
     }
 
     /**
@@ -50,14 +50,15 @@ public class ArrayStorage {
      * @param uuid unique number of the resume
      */
     void delete(String uuid) {
-        int index = this.indexOf(uuid);
+        int index = indexOf(uuid);
         if (index != -1) {
+            size--;
             System.arraycopy(
-                    this.storage,
+                    storage,
                     index + 1,
-                    this.storage,
+                    storage,
                     index,
-                    --this.size - index
+                    size - index
             );
         }
     }
@@ -66,14 +67,14 @@ public class ArrayStorage {
      * @return array, contains only Resumes in storage (without null)
      */
     Resume[] getAll() {
-        return Arrays.copyOf(this.storage, this.size);
+        return Arrays.copyOf(storage, size);
     }
 
     /**
      * @return the number of resumes this storage contains
      */
     int size() {
-        return this.size;
+        return size;
     }
 
     /**
@@ -83,8 +84,8 @@ public class ArrayStorage {
      * @return index of the specified resume
      */
     private int indexOf(String uuid) {
-        return IntStream.range(0, this.size)
-                .filter(i -> this.storage[i].toString().equals(uuid))
+        return IntStream.range(0, size)
+                .filter(i -> storage[i].toString().equals(uuid))
                 .findAny()
                 .orElse(-1);
     }
