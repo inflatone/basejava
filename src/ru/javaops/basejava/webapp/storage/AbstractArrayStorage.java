@@ -15,7 +15,7 @@ import java.util.Arrays;
  * @since 2019-02-15
  */
 public abstract class AbstractArrayStorage implements Storage {
-    private static final int STORAGE_LIMIT = 100000;
+    static final int STORAGE_LIMIT = 10000;
     /**
      * The array buffer into which the resumes are stored.
      */
@@ -83,7 +83,7 @@ public abstract class AbstractArrayStorage implements Storage {
     public void delete(String uuid) {
         int index = getIndex(uuid);
         if (index < 0) {
-            throw new ExistStorageException(uuid);
+            throw new NotExistStorageException(uuid);
         }
         fillDeletedElement(index);
         size--;
