@@ -24,9 +24,9 @@ public class ArrayStorage {
     }
 
     public void update(Resume r) {
-        int index = getIndex(r.uuid);
+        int index = getIndex(r.getUuid());
         if (index == -1) {
-            System.out.println("Resume " + r.uuid + " is not exist");
+            System.out.println("Resume " + r.getUuid() + " is not exist");
         } else {
             storage[index] = r;
         }
@@ -38,8 +38,8 @@ public class ArrayStorage {
      * @param r resume to be appended to this storage
      */
     public void save(Resume r) {
-        if (getIndex(r.uuid) != -1) {
-            System.out.println("Resume " + r.uuid + " already exist");
+        if (getIndex(r.getUuid()) != -1) {
+            System.out.println("Resume " + r.getUuid() + " already exist");
         } else if (size == storage.length) {
             System.out.println("Storage overflow");
         } else {
@@ -80,7 +80,7 @@ public class ArrayStorage {
     /**
      * @return array, contains only Resumes in storage (without null)
      */
-    Resume[] getAll() {
+    public Resume[] getAll() {
         return Arrays.copyOf(storage, size);
     }
 
@@ -99,7 +99,7 @@ public class ArrayStorage {
      */
     private int getIndex(String uuid) {
         return IntStream.range(0, size)
-                .filter(i -> storage[i].uuid.equals(uuid))
+                .filter(i -> storage[i].getUuid().equals(uuid))
                 .findAny()
                 .orElse(-1);
     }
