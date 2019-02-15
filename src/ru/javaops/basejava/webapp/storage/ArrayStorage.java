@@ -28,13 +28,13 @@ public class ArrayStorage extends AbstractArrayStorage {
     }
 
     @Override
-    protected void insert(Resume r, int index) {
+    protected void insertElement(Resume r, int index) {
         storage[size] = r;
     }
 
     @Override
-    protected void delete(int index) {
+    protected void fillDeletedElement(int index) {
         storage[index] = storage[size - 1];
-        storage[size - 1] = null;
+
     }
 }
