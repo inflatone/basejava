@@ -7,18 +7,12 @@ import java.util.stream.IntStream;
 
 /**
  * Array based storage for Resumes
+ *
+ * @author Alexander Savchenko
+ * @version 1.0
+ * @since 2018-12-18
  */
-public class ArrayStorage implements Storage {
-    private static final int STORAGE_LIMIT = 10000;
-    /**
-     * The array buffer into which the resumes are stored.
-     */
-    private final Resume[] storage = new Resume[STORAGE_LIMIT];
-
-    /**
-     * The number of resumes this storage contains.
-     */
-    private int size;
+public class ArrayStorage extends AbstractArrayStorage {
 
     /**
      * Removes all of the resumes from this storage.
@@ -56,22 +50,6 @@ public class ArrayStorage implements Storage {
     }
 
     /**
-     * Returns the resume with the specified uuid
-     *
-     * @param uuid unique number of the resume
-     * @return the resume which uuid equals specified one,
-     * or <tt>null</tt> if there was no resume for <tt>uuid</tt>
-     */
-    @Override
-    public Resume get(String uuid) {
-        int index = getIndex(uuid);
-        if (index == -1) {
-            System.out.println("Resume " + uuid + " is not exist");
-        }
-        return index != -1 ? storage[index] : null;
-    }
-
-    /**
      * Removes the resume <tt>uuid</tt> of which equals the specified one.
      *
      * @param uuid unique number of the resume
@@ -96,20 +74,13 @@ public class ArrayStorage implements Storage {
     }
 
     /**
-     * @return the number of resumes this storage contains
-     */
-    @Override
-    public int size() {
-        return size;
-    }
-
-    /**
      * Returns the index of the specified Resume <tt>uuid</tt>  of which equals the specified one.
      *
      * @param uuid unique number of the resume
      * @return index of the specified resume
      */
-    private int getIndex(String uuid) {
+    @Override
+    protected int getIndex(String uuid) {
         return IntStream.range(0, size)
                 .filter(i -> storage[i].getUuid().equals(uuid))
                 .findAny()

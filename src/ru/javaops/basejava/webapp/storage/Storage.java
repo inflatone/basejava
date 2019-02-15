@@ -2,11 +2,12 @@ package ru.javaops.basejava.webapp.storage;
 
 import ru.javaops.basejava.webapp.model.Resume;
 
-import java.util.Arrays;
-import java.util.stream.IntStream;
-
 /**
- * Array based storage for Resumes
+ * Storage interface for implementing with all storage realizations
+ *
+ * @author Alexander Savchenko
+ * @version 1.0
+ * @since 2019-02-15
  */
 public interface Storage {
     /**
