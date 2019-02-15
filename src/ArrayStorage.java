@@ -18,18 +18,33 @@ public class ArrayStorage {
     /**
      * Removes all of the resumes from this storage.
      */
-    void clear() {
+    public void clear() {
         Arrays.fill(storage, 0, size, null);
         size = 0;
+    }
+
+    public void update(Resume r) {
+        int index = getIndex(r.uuid);
+        if (index == -1) {
+            System.out.println("Resume " + r.uuid + " is not exist");
+        } else {
+            storage[index] = r;
+        }
     }
 
     /**
      * Appends the specified resume to the end of the storage.
      *
-     * @param resume resume to be appended to this storage
+     * @param r resume to be appended to this storage
      */
-    void save(Resume resume) {
-        storage[size++] = resume;
+    public void save(Resume r) {
+        if (getIndex(r.uuid) != -1) {
+            System.out.println("Resume " + r.uuid + " already exist");
+        } else if (size == storage.length) {
+            System.out.println("Storage overflow");
+        } else {
+            storage[size++] = r;
+        }
     }
 
     /**
@@ -39,8 +54,11 @@ public class ArrayStorage {
      * @return the resume which uuid equals specified one,
      * or <tt>null</tt> if there was no resume for <tt>uuid</tt>
      */
-    Resume get(String uuid) {
-        int index = indexOf(uuid);
+    public Resume get(String uuid) {
+        int index = getIndex(uuid);
+        if (index == -1) {
+            System.out.println("Resume " + uuid + " is not exist");
+        }
         return index != -1 ? storage[index] : null;
     }
 
@@ -49,17 +67,13 @@ public class ArrayStorage {
      *
      * @param uuid unique number of the resume
      */
-    void delete(String uuid) {
-        int index = indexOf(uuid);
-        if (index != -1) {
-            size--;
-            System.arraycopy(
-                    storage,
-                    index + 1,
-                    storage,
-                    index,
-                    size - index
-            );
+    public void delete(String uuid) {
+        int index = getIndex(uuid);
+        if (index == -1) {
+            System.out.println("Resume " + uuid + " is not exist");
+        } else {
+            storage[index] = storage[--size];
+            storage[size] = null;
         }
     }
 
@@ -73,7 +87,7 @@ public class ArrayStorage {
     /**
      * @return the number of resumes this storage contains
      */
-    int size() {
+    public int size() {
         return size;
     }
 
@@ -83,7 +97,7 @@ public class ArrayStorage {
      * @param uuid unique number of the resume
      * @return index of the specified resume
      */
-    private int indexOf(String uuid) {
+    private int getIndex(String uuid) {
         return IntStream.range(0, size)
                 .filter(i -> storage[i].uuid.equals(uuid))
                 .findAny()
