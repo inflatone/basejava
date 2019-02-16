@@ -43,6 +43,12 @@ public class Resume implements Comparable<Resume> {
     }
 
     @Override
+    public int compareTo(Resume o) {
+        int cmp = fullName.compareTo(o.uuid);
+        return cmp != 0 ? cmp : uuid.compareTo(o.uuid);
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
@@ -63,11 +69,5 @@ public class Resume implements Comparable<Resume> {
     @Override
     public String toString() {
         return String.format("%s(%s)", uuid, fullName);
-    }
-
-    @Override
-    public int compareTo(Resume o) {
-        int cmp = fullName.compareTo(o.uuid);
-        return cmp != 0 ? cmp : uuid.compareTo(o.uuid);
     }
 }

@@ -6,7 +6,6 @@ import ru.javaops.basejava.webapp.model.Resume;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -19,7 +18,7 @@ import java.util.stream.Stream;
  * @since 2019-02-15
  */
 public abstract class AbstractStorage<SK> implements Storage {
-    private static final Logger LOG = Logger.getLogger(AbstractStorage.class.getName());
+    protected static final Logger LOG = Logger.getLogger(AbstractStorage.class.getName());
 
     /**
      * Returns the search key defined for the specified uuid resume
