@@ -5,7 +5,6 @@ import ru.javaops.basejava.webapp.exception.NotExistStorageException;
 import ru.javaops.basejava.webapp.model.Resume;
 
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -71,7 +70,7 @@ public abstract class AbstractStorage implements Storage {
      *
      * @return resume stream
      */
-    protected abstract Stream<Resume> getAllStream();
+    protected abstract Stream<Resume> doGetAllStream();
 
     @Override
     public void save(Resume r) {
@@ -95,8 +94,8 @@ public abstract class AbstractStorage implements Storage {
 
     @Override
     public List<Resume> getAllSorted() {
-        return getAllStream()
-                .sorted(Comparator.comparing(Resume::getFullName))
+        return doGetAllStream()
+                .sorted()
                 .collect(Collectors.collectingAndThen(Collectors.toList(), Collections::unmodifiableList));
     }
 

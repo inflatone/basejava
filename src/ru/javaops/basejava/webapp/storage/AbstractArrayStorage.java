@@ -63,7 +63,7 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     }
 
     @Override
-    protected Stream<Resume> getAllStream() {
+    protected Stream<Resume> doGetAllStream() {
         return Arrays.stream(storage).limit(size);
     }
 

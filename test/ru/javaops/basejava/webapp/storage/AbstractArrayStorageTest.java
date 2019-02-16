@@ -16,11 +16,11 @@ public abstract class AbstractArrayStorageTest extends AbstractStorageTest {
     @Test(expected = StorageException.class)
     public void saveOverflow() {
         try {
-            IntStream.range(3, AbstractArrayStorage.STORAGE_LIMIT).forEach(i -> storage.save(new Resume()));
+            IntStream.range(3, AbstractArrayStorage.STORAGE_LIMIT).forEach(i -> storage.save(new Resume("Name" + i)));
         } catch (Exception e) {
             Assert.fail();
         }
         assertSize(AbstractArrayStorage.STORAGE_LIMIT);
-        storage.save(new Resume());
+        storage.save(new Resume("Overflow"));
     }
 }

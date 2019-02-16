@@ -53,7 +53,7 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    protected Stream<Resume> getAllStream() {
+    protected Stream<Resume> doGetAllStream() {
         return storage.stream();
     }
 

@@ -13,7 +13,7 @@ import java.util.stream.Stream;
  * @version 1.0
  * @since 2019-02-15
  */
-public class MapStorage extends AbstractStorage {
+public class MapUuidStorage extends AbstractStorage {
     private final Map<String, Resume> storage = new TreeMap<>();
 
     @Override
@@ -41,7 +41,7 @@ public class MapStorage extends AbstractStorage {
 
     @Override
     public void doUpdate(Resume r, Object searchKey) {
-        storage.replace((String) searchKey, r);
+        storage.put((String) searchKey, r);
     }
 
     @Override
@@ -51,7 +51,7 @@ public class MapStorage extends AbstractStorage {
     }
 
     @Override
-    protected Stream<Resume> getAllStream() {
+    protected Stream<Resume> doGetAllStream() {
         return storage.values().stream();
     }
 

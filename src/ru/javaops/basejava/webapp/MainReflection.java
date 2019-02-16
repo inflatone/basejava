@@ -14,7 +14,7 @@ import java.lang.reflect.Field;
 public class MainReflection {
 
     public static void main(String[] args) throws ReflectiveOperationException {
-        Resume r = new Resume();
+        Resume r = new Resume("");
         Class<? extends Resume> clazz = r.getClass();
         Field field = clazz.getDeclaredFields()[0];
         field.setAccessible(true);

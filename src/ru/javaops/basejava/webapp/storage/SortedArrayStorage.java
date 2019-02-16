@@ -3,6 +3,7 @@ package ru.javaops.basejava.webapp.storage;
 import ru.javaops.basejava.webapp.model.Resume;
 
 import java.util.Arrays;
+import java.util.Comparator;
 
 /**
  * Sorted array based storage
@@ -29,6 +30,8 @@ public class SortedArrayStorage extends AbstractArrayStorage {
 
     @Override
     protected Integer getSearchKey(String uuid) {
-        return Arrays.binarySearch(storage, 0, size, new Resume(uuid));
+        return Arrays.binarySearch(
+                storage, 0, size, new Resume(uuid, ""), Comparator.comparing(Resume::getUuid)
+        );
     }
 }
