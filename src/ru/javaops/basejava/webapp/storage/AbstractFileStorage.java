@@ -2,6 +2,7 @@ package ru.javaops.basejava.webapp.storage;
 
 import ru.javaops.basejava.webapp.exception.StorageException;
 import ru.javaops.basejava.webapp.model.Resume;
+import ru.javaops.basejava.webapp.util.ExcUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,10 +26,9 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
         this.directory = directory;
     }
 
-    protected abstract void doWrite(Resume r, File file) throws IOException;
+    protected abstract Resume doRead(File file) throws IOException;
 
-    @Override
-    protected abstract Resume doGet(File file);
+    protected abstract Void doWrite(Resume r, File file) throws IOException;
 
     @Override
     protected File getSearchKey(String uuid) {
@@ -42,41 +42,38 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
 
     @Override
     protected void doSave(Resume r, File file) {
-        try {
-            createFile(file);
-            doWrite(r, file);
-        } catch (IOException e) {
-            throw new StorageException("IO Error", file.getName(), e);
-        }
+        ExcUtil.catchExc(() -> doCreate(file), "Couldn't create file " + file.getAbsolutePath(), file.getName());
+        doUpdate(r, file);
+    }
+
+    @Override
+    protected Resume doGet(File file) {
+        return ExcUtil.catchExc(() -> doRead(file), "File read error", file.getName());
     }
 
     @Override
     protected void doUpdate(Resume r, File file) {
-        try {
-            doWrite(r, file);
-        } catch (IOException e) {
-            throw new StorageException("IO Error", file.getName(), e);
-        }
+        ExcUtil.catchExc(() -> doWrite(r, file), "File write error", r.getUuid());
     }
 
     @Override
     protected void doDelete(File file) {
-        handleFileOperation(file, File::delete);
+        checkNullityAndExecute(file, File::delete, "Couldn't delete file " + file.getAbsolutePath(), file.getName());
     }
 
     @Override
     protected Stream<Resume> doGetAllStream() {
-        return Arrays.stream(Objects.requireNonNull(directory.listFiles())).map(this::doGet);
+        return Arrays.stream(getAll(File::listFiles)).map(this::doGet);
     }
 
     @Override
     public void clear() {
-        Arrays.stream(Objects.requireNonNull(directory.listFiles())).forEach(f -> handleFileOperation(f, File::delete));
+        Arrays.stream(getAll(File::listFiles)).forEach(this::doDelete);
     }
 
     @Override
     public int size() {
-        return Objects.requireNonNull(directory.list()).length;
+        return getAll(File::list).length;
     }
 
     private void requireAvailable(File directory) {
@@ -89,17 +86,22 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
         }
     }
 
-    private void handleFileOperation(File file, Function<File, Boolean> operation) {
-        if (!operation.apply(file)) {
-            LOG.warning("I/O Error during operating file " + file.getName());
-            throw new StorageException("IO Error", file.getName());
+    private Void doCreate(File file) throws IOException {
+        if (!file.createNewFile()) {
+            throw new StorageException("Couldn't create file " + file.getAbsolutePath(), file.getName());
         }
+        return null;
     }
 
-    private void createFile(File file) throws IOException {
-        if (!file.createNewFile()) {
-            LOG.warning("I/O Error during creating file " + file.getName());
-            throw new StorageException("IO Error", file.getName());
+    private <T> T checkNullityAndExecute(File file, Function<File, T> operation, String excMessage, String excUuid) {
+        T result = operation.apply(file);
+        if (result == null) {
+            throw new StorageException(excMessage, excUuid);
         }
+        return result;
+    }
+
+    private <T> T[] getAll(Function<File, T[]> directoryFlatMapper) {
+        return checkNullityAndExecute(directory, directoryFlatMapper, "Directory read error", null);
     }
 }
