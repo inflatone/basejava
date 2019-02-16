@@ -13,11 +13,6 @@ import java.util.Arrays;
  */
 public class SortedArrayStorage extends AbstractArrayStorage {
     @Override
-    protected int getIndex(String uuid) {
-         return Arrays.binarySearch(storage, 0, size, new Resume(uuid));
-    }
-
-    @Override
     protected void insertElement(Resume r, int index) {
         index = -index - 1;
         System.arraycopy(storage, index, storage, index + 1, size - index);
@@ -30,5 +25,10 @@ public class SortedArrayStorage extends AbstractArrayStorage {
         if (amountToMove > 0) {
             System.arraycopy(storage, index + 1, storage, index, amountToMove);
         }
+    }
+
+    @Override
+    protected Integer getSearchKey(String uuid) {
+        return Arrays.binarySearch(storage, 0, size, new Resume(uuid));
     }
 }

@@ -11,13 +11,6 @@ import ru.javaops.basejava.webapp.model.Resume;
  */
 public interface Storage {
     /**
-     * Removes all of the resumes from this storage.
-     */
-    void clear();
-
-    void update(Resume r);
-
-    /**
      * Appends the specified resume to the end of the storage.
      *
      * @param r resume to be appended to this storage
@@ -34,11 +27,23 @@ public interface Storage {
     Resume get(String uuid);
 
     /**
+     * Updates the resume with the specified uuid
+     *
+     * @param r resume to update
+     */
+    void update(Resume r);
+
+    /**
      * Removes the resume <tt>uuid</tt> of which equals the specified one.
      *
      * @param uuid unique number of the resume
      */
     void delete(String uuid);
+
+    /**
+     * Removes all of the resumes from this storage.
+     */
+    void clear();
 
     /**
      * @return array, contains only Resumes in storage (without null)
