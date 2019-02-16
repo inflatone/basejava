@@ -13,7 +13,7 @@ import java.util.stream.Stream;
  * @version 1.0
  * @since 2019-02-15
  */
-public class MapResumeStorage extends AbstractStorage {
+public class MapResumeStorage extends AbstractStorage<Resume> {
     private final Map<String, Resume> storage = new TreeMap<>();
 
     @Override
@@ -22,28 +22,28 @@ public class MapResumeStorage extends AbstractStorage {
     }
 
     @Override
-    protected boolean isExist(Object resume) {
+    protected boolean isExist(Resume resume) {
         return resume != null;
     }
 
     @Override
-    public void doSave(Resume r, Object resume) {
+    public void doSave(Resume r, Resume resume) {
         storage.put(r.getUuid(), r);
     }
 
     @Override
-    public Resume doGet(Object resume) {
-        return (Resume) resume;
+    public Resume doGet(Resume resume) {
+        return resume;
     }
 
     @Override
-    public void doUpdate(Resume r, Object searchKey) {
+    public void doUpdate(Resume r, Resume searchKey) {
         storage.put(r.getUuid(), r);
     }
 
     @Override
-    public void doDelete(Object resume) {
-        storage.remove(((Resume) resume).getUuid());
+    public void doDelete(Resume resume) {
+        storage.remove((resume).getUuid());
     }
 
     @Override

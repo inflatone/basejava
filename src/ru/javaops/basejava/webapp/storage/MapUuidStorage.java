@@ -13,7 +13,7 @@ import java.util.stream.Stream;
  * @version 1.0
  * @since 2019-02-15
  */
-public class MapUuidStorage extends AbstractStorage {
+public class MapUuidStorage extends AbstractStorage<String> {
     private final Map<String, Resume> storage = new TreeMap<>();
 
     @Override
@@ -22,32 +22,29 @@ public class MapUuidStorage extends AbstractStorage {
     }
 
     @Override
-    protected boolean isExist(Object uuid) {
-        String key = (String) uuid;
-        return storage.containsKey(key);
+    protected boolean isExist(String uuid) {
+        return storage.containsKey(uuid);
     }
 
 
     @Override
-    public void doSave(Resume r, Object searchKey) {
-        storage.put((String) searchKey, r);
+    public void doSave(Resume r, String searchKey) {
+        storage.put(searchKey, r);
     }
 
     @Override
-    public Resume doGet(Object uuid) {
-        String key = (String) uuid;
-        return storage.get(key);
+    public Resume doGet(String uuid) {
+        return storage.get(uuid);
     }
 
     @Override
-    public void doUpdate(Resume r, Object searchKey) {
-        storage.put((String) searchKey, r);
+    public void doUpdate(Resume r, String searchKey) {
+        storage.put(searchKey, r);
     }
 
     @Override
-    public void doDelete(Object uuid) {
-        String key = (String) uuid;
-        storage.remove(key);
+    public void doDelete(String uuid) {
+        storage.remove(uuid);
     }
 
     @Override

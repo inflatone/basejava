@@ -14,7 +14,7 @@ import java.util.stream.Stream;
  * @version 1.0
  * @since 2019-02-15
  */
-public class ListStorage extends AbstractStorage {
+public class ListStorage extends AbstractStorage<Integer> {
     private final List<Resume> storage = new ArrayList<>();
 
     @Override
@@ -27,29 +27,29 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    protected boolean isExist(Object index) {
+    protected boolean isExist(Integer index) {
         return index != null;
     }
 
 
     @Override
-    public void doSave(Resume r, Object index) {
+    public void doSave(Resume r, Integer index) {
         storage.add(r);
     }
 
     @Override
-    public Resume doGet(Object index) {
-        return storage.get((int) index);
+    public Resume doGet(Integer index) {
+        return storage.get(index);
     }
 
     @Override
-    public void doUpdate(Resume r, Object index) {
-        storage.set((int) index, r);
+    public void doUpdate(Resume r, Integer index) {
+        storage.set(index, r);
     }
 
     @Override
-    public void doDelete(Object index) {
-        storage.remove((int) index);
+    public void doDelete(Integer index) {
+        storage.remove(index.intValue());
     }
 
     @Override

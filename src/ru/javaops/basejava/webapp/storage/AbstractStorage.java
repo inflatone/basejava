@@ -16,14 +16,14 @@ import java.util.stream.Stream;
  * @version 1.0
  * @since 2019-02-15
  */
-public abstract class AbstractStorage implements Storage {
+public abstract class AbstractStorage<SK> implements Storage {
     /**
      * Returns the search key defined for the specified uuid resume
      *
      * @param uuid uuid of the specified resume
      * @return search key
      */
-    protected abstract Object getSearchKey(String uuid);
+    protected abstract SK getSearchKey(String uuid);
 
     /**
      * Checks if the resume specified by search key is contained in the storage
@@ -31,7 +31,7 @@ public abstract class AbstractStorage implements Storage {
      * @param searchKey search key to define the resume position in storage
      * @return <tt>true</tt> if storage contains resume
      */
-    protected abstract boolean isExist(Object searchKey);
+    protected abstract boolean isExist(SK searchKey);
 
     /**
      * Do save operation of new resume.
@@ -40,7 +40,7 @@ public abstract class AbstractStorage implements Storage {
      * @param r         new resume
      * @param searchKey search key to define the resume position in storage
      */
-    protected abstract void doSave(Resume r, Object searchKey);
+    protected abstract void doSave(Resume r, SK searchKey);
 
     /**
      * Do get resume operation by its search key.
@@ -48,7 +48,7 @@ public abstract class AbstractStorage implements Storage {
      * @param existedSearchKey search key to define the resume position in storage
      * @return correct stored resume
      */
-    protected abstract Resume doGet(Object existedSearchKey);
+    protected abstract Resume doGet(SK existedSearchKey);
 
     /**
      * Do update resume operation by its search key
@@ -56,14 +56,14 @@ public abstract class AbstractStorage implements Storage {
      * @param r         updated version of resume
      * @param searchKey search key to define the resume position in storage
      */
-    protected abstract void doUpdate(Resume r, Object searchKey);
+    protected abstract void doUpdate(Resume r, SK searchKey);
 
     /**
      * Do delete resume operation by its search key
      *
      * @param searchKey search key to define the resume position in storage
      */
-    protected abstract void doDelete(Object searchKey);
+    protected abstract void doDelete(SK searchKey);
 
     /**
      * Returns stream of all the resumes in the storage
@@ -106,8 +106,8 @@ public abstract class AbstractStorage implements Storage {
      * @return search key to handle read-update-delete operations with the storage
      * @throws NotExistStorageException if resume with this uuid not found in storage
      */
-    private Object getExistedSearchKey(String uuid) {
-        Object searchKey = getSearchKey(uuid);
+    private SK getExistedSearchKey(String uuid) {
+        SK searchKey = getSearchKey(uuid);
         if (!isExist(searchKey)) {
             throw new NotExistStorageException(uuid);
         }
@@ -121,8 +121,8 @@ public abstract class AbstractStorage implements Storage {
      * @return search key to handle create operations with the storage
      * @throws ExistStorageException if resume with this uuid already stored
      */
-    private Object getNotExistedSearchKey(String uuid) {
-        Object searchKey = getSearchKey(uuid);
+    private SK getNotExistedSearchKey(String uuid) {
+        SK searchKey = getSearchKey(uuid);
         if (isExist(searchKey)) {
             throw new ExistStorageException(uuid);
         }
