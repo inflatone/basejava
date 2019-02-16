@@ -5,6 +5,7 @@ import ru.javaops.basejava.webapp.model.Resume;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 /**
  * ArrayList based storage for Resumes
@@ -51,15 +52,14 @@ public class ListStorage extends AbstractStorage {
         storage.remove((int) index);
     }
 
+    @Override
+    protected Stream<Resume> getAllStream() {
+        return storage.stream();
+    }
 
     @Override
     public void clear() {
         storage.clear();
-    }
-
-    @Override
-    public Resume[] getAll() {
-        return storage.toArray(new Resume[0]);
     }
 
     @Override

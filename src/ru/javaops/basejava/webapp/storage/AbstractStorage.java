@@ -4,6 +4,12 @@ import ru.javaops.basejava.webapp.exception.ExistStorageException;
 import ru.javaops.basejava.webapp.exception.NotExistStorageException;
 import ru.javaops.basejava.webapp.model.Resume;
 
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 /**
  * Abstract Storage
  *
@@ -60,6 +66,13 @@ public abstract class AbstractStorage implements Storage {
      */
     protected abstract void doDelete(Object searchKey);
 
+    /**
+     * Returns stream of all the resumes in the storage
+     *
+     * @return resume stream
+     */
+    protected abstract Stream<Resume> getAllStream();
+
     @Override
     public void save(Resume r) {
         doSave(r, getNotExistedSearchKey(r.getUuid()));
@@ -78,6 +91,13 @@ public abstract class AbstractStorage implements Storage {
     @Override
     public void delete(String uuid) {
         doDelete(getExistedSearchKey(uuid));
+    }
+
+    @Override
+    public List<Resume> getAllSorted() {
+        return getAllStream()
+                .sorted(Comparator.comparing(Resume::getFullName))
+                .collect(Collectors.collectingAndThen(Collectors.toList(), Collections::unmodifiableList));
     }
 
     /**

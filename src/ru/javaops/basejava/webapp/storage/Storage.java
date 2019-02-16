@@ -2,6 +2,8 @@ package ru.javaops.basejava.webapp.storage;
 
 import ru.javaops.basejava.webapp.model.Resume;
 
+import java.util.List;
+
 /**
  * Storage interface for implementing with all storage realizations
  *
@@ -46,9 +48,9 @@ public interface Storage {
     void clear();
 
     /**
-     * @return array, contains only Resumes in storage (without null)
+     * @return list, contains all resumes in storage (sorted by fullName)
      */
-    Resume[] getAll();
+    List<Resume> getAllSorted();
 
     /**
      * @return the number of resumes this storage contains

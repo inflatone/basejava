@@ -4,6 +4,7 @@ import ru.javaops.basejava.webapp.model.Resume;
 
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.stream.Stream;
 
 /**
  * HashMap based storage for Resumes
@@ -49,15 +50,14 @@ public class MapStorage extends AbstractStorage {
         storage.remove(key);
     }
 
+    @Override
+    protected Stream<Resume> getAllStream() {
+        return storage.values().stream();
+    }
 
     @Override
     public void clear() {
         storage.clear();
-    }
-
-    @Override
-    public Resume[] getAll() {
-        return storage.values().toArray(new Resume[0]);
     }
 
     @Override
