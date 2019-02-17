@@ -1,15 +1,16 @@
 package ru.javaops.basejava.webapp.storage;
 
-import ru.javaops.basejava.webapp.exception.StorageException;
 import ru.javaops.basejava.webapp.model.Resume;
 import ru.javaops.basejava.webapp.util.ExcUtil;
+import ru.javaops.basejava.webapp.util.ValidateUtil;
 
 import java.io.*;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.function.Function;
-import java.util.function.Predicate;
 import java.util.stream.Stream;
+
+import static ru.javaops.basejava.webapp.util.ValidateUtil.executeAndValidate;
 
 /**
  * File based storage for Resumes
@@ -27,9 +28,8 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
 
     private final File directory;
 
-    public AbstractFileStorage(File directory) {
-        requireAvailable(directory);
-        this.directory = directory;
+    public AbstractFileStorage(String directory) {
+        this.directory = ValidateUtil.validateAndGetDirectoryFile(directory);
     }
 
     protected abstract Resume doRead(InputStream is) throws IOException;
@@ -94,26 +94,6 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     @Override
     public int size() {
         return getAll(File::list).length;
-    }
-
-    private void requireAvailable(File directory) {
-        Objects.requireNonNull(directory, "directory must not be null");
-        if (!directory.isDirectory()) {
-            throw new IllegalArgumentException(directory.getAbsolutePath() + " is not directory");
-        }
-        if (!directory.canRead() || !directory.canWrite()) {
-            throw new IllegalArgumentException(directory.getAbsolutePath() + " is not readable/writable");
-        }
-    }
-
-    private <T> T executeAndValidate(
-            ExcUtil.UnaryEx<T> operation, Predicate<T> validator, String excMessage, String excUuid
-    ) {
-        T result = ExcUtil.catchExc(operation, excMessage, excUuid);
-        if (!validator.test(result)) {
-            throw new StorageException(excMessage, excUuid);
-        }
-        return result;
     }
 
     private <T> T[] getAll(Function<File, T[]> directoryFlatMapper) {
