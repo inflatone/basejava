@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 /**
@@ -19,6 +20,12 @@ import java.util.stream.Stream;
  * @since 2019-02-16
  */
 public abstract class AbstractFileStorage extends AbstractStorage<File> {
+    private final static String COULD_NOT_CREATE_FILE = "Couldn't create file %s";
+    private final static String COULD_NOT_DELETE_FILE = "Couldn't delete file %s";
+    private final static String DIRECTORY_READ_ERROR = "Directory read error";
+    private final static String FILE_READ_ERROR = "File read error";
+    private final static String FILE_WRITE_ERROR = "File write error";
+
     private final File directory;
 
     public AbstractFileStorage(File directory) {
@@ -42,23 +49,33 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
 
     @Override
     protected void doSave(Resume r, File file) {
-        ExcUtil.catchExc(() -> doCreate(file), "Couldn't create file " + file.getAbsolutePath(), file.getName());
+        executeAndValidate(
+                file::createNewFile,
+                result -> result,
+                String.format(COULD_NOT_CREATE_FILE, file.getAbsolutePath()),
+                file.getName()
+        );
         doUpdate(r, file);
     }
 
     @Override
     protected Resume doGet(File file) {
-        return ExcUtil.catchExc(() -> doRead(file), "File read error", file.getName());
+        return ExcUtil.catchExc(() -> doRead(file), FILE_READ_ERROR, file.getName());
     }
 
     @Override
     protected void doUpdate(Resume r, File file) {
-        ExcUtil.catchExc(() -> doWrite(r, file), "File write error", r.getUuid());
+        ExcUtil.catchExc(() -> doWrite(r, file), FILE_WRITE_ERROR, r.getUuid());
     }
 
     @Override
     protected void doDelete(File file) {
-        checkNullityAndExecute(file, File::delete, "Couldn't delete file " + file.getAbsolutePath(), file.getName());
+        executeAndValidate(
+                file::delete,
+                result -> result,
+                String.format(COULD_NOT_DELETE_FILE, file.getAbsolutePath()),
+                file.getName()
+        );
     }
 
     @Override
@@ -86,22 +103,22 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
         }
     }
 
-    private Void doCreate(File file) throws IOException {
-        if (!file.createNewFile()) {
-            throw new StorageException("Couldn't create file " + file.getAbsolutePath(), file.getName());
-        }
-        return null;
-    }
-
-    private <T> T checkNullityAndExecute(File file, Function<File, T> operation, String excMessage, String excUuid) {
-        T result = operation.apply(file);
-        if (result == null) {
+    private <T> T executeAndValidate(
+            ExcUtil.UnaryEx<T> operation, Predicate<T> validator, String excMessage, String excUuid
+    ) {
+        T result = ExcUtil.catchExc(operation, excMessage, excUuid);
+        if (!validator.test(result)) {
             throw new StorageException(excMessage, excUuid);
         }
         return result;
     }
 
     private <T> T[] getAll(Function<File, T[]> directoryFlatMapper) {
-        return checkNullityAndExecute(directory, directoryFlatMapper, "Directory read error", null);
+        return executeAndValidate(
+                () -> directoryFlatMapper.apply(directory),
+                Objects::nonNull,
+                DIRECTORY_READ_ERROR,
+                null
+        );
     }
 }
