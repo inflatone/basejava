@@ -12,6 +12,8 @@ import java.util.Objects;
  * @since 2019-02-16
  */
 public class OrganizationSection extends Section {
+    private static final long serialVersionUID = 1L;
+
     private final List<Organization> organizations;
 
     public OrganizationSection(Organization... organizations) {

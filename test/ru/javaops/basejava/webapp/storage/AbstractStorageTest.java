@@ -72,10 +72,7 @@ public abstract class AbstractStorageTest {
         storage.save(R3);
     }
 
-    @After
-    public void cleanUp() {
-        storage.clear();
-    }
+
 
     @Test
     public void size() {
@@ -101,7 +98,7 @@ public abstract class AbstractStorageTest {
     public void update() {
         Resume newResume = new Resume(UUID_1, "New name");
         storage.update(newResume);
-        assertSame(newResume, storage.get(UUID_1));
+        assertEquals(newResume, storage.get(UUID_1));
     }
 
     @Test(expected = NotExistStorageException.class)

@@ -1,5 +1,6 @@
 package ru.javaops.basejava.webapp.model;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 /**
@@ -9,7 +10,9 @@ import java.util.Objects;
  * @version 1.0
  * @since 2019-02-16
  */
-public class Link {
+public class Link implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     private final String name;
     private final String url;
 

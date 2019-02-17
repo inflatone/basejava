@@ -28,7 +28,7 @@ public class ExcUtil {
     }
 
     /**
-     * Function interface with operation throwing checked {@link IOException}.
+     * Function interface with operation throwing checked exceptions.
      * <p>
      * https://github.com/peterarsentev/code_quality_principles#4-dont-use-exceptions-exceptions-make-your-code-ugly
      */

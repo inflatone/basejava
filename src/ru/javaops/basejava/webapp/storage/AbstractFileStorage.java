@@ -4,8 +4,7 @@ import ru.javaops.basejava.webapp.exception.StorageException;
 import ru.javaops.basejava.webapp.model.Resume;
 import ru.javaops.basejava.webapp.util.ExcUtil;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.function.Function;
@@ -33,9 +32,9 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
         this.directory = directory;
     }
 
-    protected abstract Resume doRead(File file) throws IOException;
+    protected abstract Resume doRead(InputStream is) throws IOException;
 
-    protected abstract Void doWrite(Resume r, File file) throws IOException;
+    protected abstract Void doWrite(Resume r, OutputStream os) throws IOException;
 
     @Override
     protected File getSearchKey(String uuid) {
@@ -60,12 +59,16 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
 
     @Override
     protected Resume doGet(File file) {
-        return ExcUtil.catchExc(() -> doRead(file), FILE_READ_ERROR, file.getName());
+        return ExcUtil.catchExc(
+                () -> doRead(new BufferedInputStream(new FileInputStream(file))), FILE_READ_ERROR, file.getName()
+        );
     }
 
     @Override
     protected void doUpdate(Resume r, File file) {
-        ExcUtil.catchExc(() -> doWrite(r, file), FILE_WRITE_ERROR, r.getUuid());
+        ExcUtil.catchExc(
+                () -> doWrite(r, new BufferedOutputStream(new FileOutputStream(file))), FILE_WRITE_ERROR, r.getUuid()
+        );
     }
 
     @Override

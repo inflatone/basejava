@@ -12,6 +12,8 @@ import java.util.Objects;
  * @since 2019-02-16
  */
 public class ListSection extends Section {
+    private static final long serialVersionUID = 1L;
+
     private final List<String> items;
 
     public ListSection(List<String> items) {
