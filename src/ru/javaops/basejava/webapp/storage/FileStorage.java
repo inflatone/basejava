@@ -1,8 +1,6 @@
 package ru.javaops.basejava.webapp.storage;
 
-import ru.javaops.basejava.webapp.model.Resume;
 import ru.javaops.basejava.webapp.storage.serializer.StreamSerializer;
-import ru.javaops.basejava.webapp.util.ExcUtil;
 import ru.javaops.basejava.webapp.util.ValidateUtil;
 
 import java.io.*;
@@ -20,19 +18,37 @@ import static ru.javaops.basejava.webapp.util.ValidateUtil.executeAndValidate;
  * @version 1.0
  * @since 2019-02-16
  */
-public class FileStorage extends AbstractStorage<File> {
-    private final static String COULD_NOT_CREATE_FILE = "Couldn't create file %s";
-    private final static String COULD_NOT_DELETE_FILE = "Couldn't delete file %s";
-    private final static String DIRECTORY_READ_ERROR = "Directory read error";
-    private final static String FILE_READ_ERROR = "File read error";
-    private final static String FILE_WRITE_ERROR = "File write error";
-
+public class FileStorage extends AbstractSerializedStorage<File> {
     private final File directory;
-    private StreamSerializer serializer;
 
     public FileStorage(String directory, StreamSerializer serializer) {
+        super(serializer);
         this.directory = ValidateUtil.validateAndGetDirectoryFile(directory);
-        this.serializer = serializer;
+    }
+
+    @Override
+    protected InputStream newIn(File file) throws IOException {
+        return new FileInputStream(file);
+    }
+
+    @Override
+    protected OutputStream newOut(File file) throws IOException {
+        return new FileOutputStream(file);
+    }
+
+    @Override
+    protected boolean doCreateFile(File file) throws IOException {
+        return file.createNewFile();
+    }
+
+    @Override
+    protected boolean doDeleteFile(File file) {
+        return file.delete();
+    }
+
+    @Override
+    protected String getFileName(File file) {
+        return file.getName();
     }
 
     @Override
@@ -46,61 +62,15 @@ public class FileStorage extends AbstractStorage<File> {
     }
 
     @Override
-    protected void doSave(Resume r, File file) {
-        executeAndValidate(
-                file::createNewFile,
-                result -> result,
-                String.format(COULD_NOT_CREATE_FILE, file.getAbsolutePath()),
-                file.getName()
-        );
-        doUpdate(r, file);
-    }
-
-    @Override
-    protected Resume doGet(File file) {
-        return ExcUtil.catchExc(
-                () -> serializer.doRead(new BufferedInputStream(new FileInputStream(file))), FILE_READ_ERROR, file.getName()
-        );
-    }
-
-    @Override
-    protected void doUpdate(Resume r, File file) {
-        ExcUtil.catchExc(
-                () -> serializer.doWrite(r, new BufferedOutputStream(new FileOutputStream(file))), FILE_WRITE_ERROR, r.getUuid()
-        );
-    }
-
-    @Override
-    protected void doDelete(File file) {
-        executeAndValidate(
-                file::delete,
-                result -> result,
-                String.format(COULD_NOT_DELETE_FILE, file.getAbsolutePath()),
-                file.getName()
-        );
-    }
-
-    @Override
-    protected Stream<Resume> doGetAllStream() {
-        return Arrays.stream(getAll(File::listFiles)).map(this::doGet);
-    }
-
-    @Override
-    public void clear() {
-        Arrays.stream(getAll(File::listFiles)).forEach(this::doDelete);
-    }
-
-    @Override
-    public int size() {
-        return getAll(File::list).length;
+    protected Stream<File> getAll() {
+        return Arrays.stream(getAll(File::listFiles));
     }
 
     private <T> T[] getAll(Function<File, T[]> directoryFlatMapper) {
         return executeAndValidate(
                 () -> directoryFlatMapper.apply(directory),
                 Objects::nonNull,
-                DIRECTORY_READ_ERROR,
-                null
+                DIRECTORY_READ_ERROR
         );
     }
 }

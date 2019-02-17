@@ -27,6 +27,12 @@ public class ExcUtil {
         }
     }
 
+    public static <T> T catchExc(UnaryEx<T> throwing, String message) {
+        return catchExc(throwing, message, null);
+    }
+
+
+
     /**
      * Function interface with operation throwing checked exceptions.
      * <p>

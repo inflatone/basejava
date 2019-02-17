@@ -46,6 +46,12 @@ public class ValidateUtil {
     }
 
     public static <T> T executeAndValidate(
+            ExcUtil.UnaryEx<T> operation, Predicate<T> validator, String excMessage
+    ) {
+        return executeAndValidate(operation, validator, excMessage, null);
+    }
+
+    public static <T> T executeAndValidate(
             ExcUtil.UnaryEx<T> operation, Predicate<T> validator, String excMessage, String excUuid
     ) {
         T result = ExcUtil.catchExc(operation, excMessage, excUuid);

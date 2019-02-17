@@ -18,7 +18,7 @@ import java.util.stream.Stream;
  * @since 2019-02-15
  */
 public abstract class AbstractStorage<SK> implements Storage {
-    protected static final Logger LOG = Logger.getLogger(AbstractStorage.class.getName());
+    private static final Logger LOG = Logger.getLogger(AbstractStorage.class.getName());
 
     /**
      * Returns the search key defined for the specified uuid resume
