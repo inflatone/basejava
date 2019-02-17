@@ -1,7 +1,7 @@
 package ru.javaops.basejava.webapp.storage.serializer;
 
-import ru.javaops.basejava.webapp.model.*;
-import ru.javaops.basejava.webapp.util.XmlParser;
+import ru.javaops.basejava.webapp.model.Resume;
+import ru.javaops.basejava.webapp.util.JsonParser;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -13,20 +13,11 @@ import java.nio.charset.StandardCharsets;
  * @version 1.0
  * @since 2019-02-17
  */
-public class XmlStreamSerializer implements StreamSerializer {
-    private XmlParser xmlParser;
-
-    public XmlStreamSerializer() {
-        xmlParser = new XmlParser(
-                Resume.class, Organization.class, Link.class, Organization.Position.class,
-                OrganizationSection.class, TextSection.class, ListSection.class
-        );
-    }
-
+public class JsonStreamSerializer implements StreamSerializer {
     @Override
     public Void doWrite(Resume r, OutputStream os) throws IOException {
         try (Writer writer = new OutputStreamWriter(os, StandardCharsets.UTF_8)) {
-            xmlParser.marshall(r, writer);
+            JsonParser.write(r, writer);
         }
         return null;
     }
@@ -34,7 +25,7 @@ public class XmlStreamSerializer implements StreamSerializer {
     @Override
     public Resume doRead(InputStream is) throws IOException {
         try (Reader reader = new InputStreamReader(is, StandardCharsets.UTF_8)) {
-            return xmlParser.unmarshall(reader, Resume.class);
+            return JsonParser.read(reader, Resume.class);
         }
     }
 }
