@@ -24,8 +24,9 @@ import java.util.Objects;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Organization implements Serializable {
     private static final long serialVersionUID = 1L;
-    private final List<Position> positions;
+
     private Link homePage;
+    private final List<Position> positions;
 
     public Organization() {
         positions = new ArrayList<>();
@@ -38,6 +39,14 @@ public class Organization implements Serializable {
 
     public Organization(String name, String url, Position... positions) {
         this(new Link(name, url), Arrays.asList(positions));
+    }
+
+    public Link getHomePage() {
+        return homePage;
+    }
+
+    public List<Position> getPositions() {
+        return positions;
     }
 
     @Override
