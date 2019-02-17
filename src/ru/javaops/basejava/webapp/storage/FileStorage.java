@@ -1,6 +1,7 @@
 package ru.javaops.basejava.webapp.storage;
 
 import ru.javaops.basejava.webapp.model.Resume;
+import ru.javaops.basejava.webapp.storage.serializer.StreamSerializer;
 import ru.javaops.basejava.webapp.util.ExcUtil;
 import ru.javaops.basejava.webapp.util.ValidateUtil;
 
@@ -19,7 +20,7 @@ import static ru.javaops.basejava.webapp.util.ValidateUtil.executeAndValidate;
  * @version 1.0
  * @since 2019-02-16
  */
-public abstract class AbstractFileStorage extends AbstractStorage<File> {
+public class FileStorage extends AbstractStorage<File> {
     private final static String COULD_NOT_CREATE_FILE = "Couldn't create file %s";
     private final static String COULD_NOT_DELETE_FILE = "Couldn't delete file %s";
     private final static String DIRECTORY_READ_ERROR = "Directory read error";
@@ -27,14 +28,12 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     private final static String FILE_WRITE_ERROR = "File write error";
 
     private final File directory;
+    private StreamSerializer serializer;
 
-    public AbstractFileStorage(String directory) {
+    public FileStorage(String directory, StreamSerializer serializer) {
         this.directory = ValidateUtil.validateAndGetDirectoryFile(directory);
+        this.serializer = serializer;
     }
-
-    protected abstract Resume doRead(InputStream is) throws IOException;
-
-    protected abstract Void doWrite(Resume r, OutputStream os) throws IOException;
 
     @Override
     protected File getSearchKey(String uuid) {
@@ -60,14 +59,14 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     @Override
     protected Resume doGet(File file) {
         return ExcUtil.catchExc(
-                () -> doRead(new BufferedInputStream(new FileInputStream(file))), FILE_READ_ERROR, file.getName()
+                () -> serializer.doRead(new BufferedInputStream(new FileInputStream(file))), FILE_READ_ERROR, file.getName()
         );
     }
 
     @Override
     protected void doUpdate(Resume r, File file) {
         ExcUtil.catchExc(
-                () -> doWrite(r, new BufferedOutputStream(new FileOutputStream(file))), FILE_WRITE_ERROR, r.getUuid()
+                () -> serializer.doWrite(r, new BufferedOutputStream(new FileOutputStream(file))), FILE_WRITE_ERROR, r.getUuid()
         );
     }
 
