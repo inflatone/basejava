@@ -1,6 +1,5 @@
 package ru.javaops.basejava.webapp.storage;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import ru.javaops.basejava.webapp.exception.ExistStorageException;
@@ -9,10 +8,10 @@ import ru.javaops.basejava.webapp.model.*;
 
 import java.time.Month;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertSame;
 
 public abstract class AbstractStorageTest {
     private static final String UUID_1 = "uuid1";
@@ -73,7 +72,6 @@ public abstract class AbstractStorageTest {
     }
 
 
-
     @Test
     public void size() {
         assertSize(3);
@@ -89,9 +87,9 @@ public abstract class AbstractStorageTest {
     public void getAllSorted() {
         List<Resume> resumes = storage.getAllSorted();
         assertEquals(3, resumes.size());
-        assertEquals(
-                resumes, Arrays.asList(R3, R2, R1)
-        );
+        List<Resume> expected = Arrays.asList(R1, R2, R3);
+        Collections.sort(expected);
+        assertEquals(expected, resumes);
     }
 
     @Test

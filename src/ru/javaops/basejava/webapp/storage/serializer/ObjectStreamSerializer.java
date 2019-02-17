@@ -6,7 +6,7 @@ import ru.javaops.basejava.webapp.model.Resume;
 import java.io.*;
 
 /**
- * Storage of resumes based on Java serialization mechanism
+ * Object stream serialization strategy
  *
  * @author Alexander Savchenko
  * @version 1.0

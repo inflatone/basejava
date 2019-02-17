@@ -1,10 +1,15 @@
 package ru.javaops.basejava.webapp.model;
 
 import ru.javaops.basejava.webapp.util.DateUtil;
+import ru.javaops.basejava.webapp.util.LocalDateAdapter;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.Month;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -16,11 +21,15 @@ import java.util.Objects;
  * @version 1.0
  * @since 2019-02-16
  */
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Organization implements Serializable {
     private static final long serialVersionUID = 1L;
-
-    private final Link homePage;
     private final List<Position> positions;
+    private Link homePage;
+
+    public Organization() {
+        positions = new ArrayList<>();
+    }
 
     public Organization(Link homePage, List<Position> positions) {
         this.homePage = homePage;
@@ -50,14 +59,21 @@ public class Organization implements Serializable {
         return "Organization(" + homePage + "," + positions + ')';
     }
 
+    @XmlAccessorType(XmlAccessType.FIELD)
     public static class Position implements Serializable {
         private static final long serialVersionUID = 1L;
 
-        private final LocalDate startDate;
-        private final LocalDate endDate;
+        @XmlJavaTypeAdapter(LocalDateAdapter.class)
+        private LocalDate startDate;
 
-        private final String title;
-        private final String description;
+        @XmlJavaTypeAdapter(LocalDateAdapter.class)
+        private LocalDate endDate;
+
+        private String title;
+        private String description;
+
+        public Position() {
+        }
 
         public Position(int startYear, Month startMonth, String title, String description) {
             this(DateUtil.of(startYear, startMonth), DateUtil.NOW, title, description);
