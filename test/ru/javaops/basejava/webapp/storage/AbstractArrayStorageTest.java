@@ -5,12 +5,9 @@ import org.junit.Test;
 import ru.javaops.basejava.webapp.exception.StorageException;
 import ru.javaops.basejava.webapp.model.Resume;
 
-import java.io.File;
 import java.util.stream.IntStream;
 
 public abstract class AbstractArrayStorageTest extends AbstractStorageTest {
-    protected static final String STORAGE_DIR = "D:/projects/basejava/storage";
-
     public AbstractArrayStorageTest(Storage storage) {
         super(storage);
     }
