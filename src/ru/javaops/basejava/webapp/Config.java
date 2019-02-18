@@ -6,6 +6,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
+/**
+ * Provides getting extra app properties loading them from disk.
+ *
+ * @author Alexander Savchenko
+ * @version 1.0
+ * @since 2019-02-18
+ */
 public class Config {
     static final File PROPS = new File("./config/resumes.properties");
     private static Config INSTANCE = new Config();
