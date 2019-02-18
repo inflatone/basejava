@@ -1,7 +1,5 @@
 package ru.javaops.basejava.webapp.exception;
 
-import java.io.IOException;
-
 /**
  * Basic exception of storage
  *
