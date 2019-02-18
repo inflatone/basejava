@@ -23,7 +23,6 @@ public class Config {
         try (InputStream is = new FileInputStream(PROPS)) {
             props.load(is);
             storageDir = props.getProperty("storage.dir");
-            System.out.println(storageDir);
         } catch (IOException e) {
             throw new IllegalStateException("Invalid config file " + PROPS.getAbsolutePath());
         }
@@ -36,4 +35,16 @@ public class Config {
     public String getStorageDir() {
         return storageDir;
     }
+
+    public String getDbUrl() {
+        return props.getProperty("db.url");
+    }
+    public String getDbUser() {
+        return props.getProperty("db.user");
+    }
+
+    public String getDbPassword() {
+        return props.getProperty("db.password");
+    }
+
 }
