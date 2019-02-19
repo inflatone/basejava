@@ -11,16 +11,17 @@ import java.time.Month;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
 
 public abstract class AbstractStorageTest {
     static final String STORAGE_DIR = Config.get().getStorageDir();
 
-    private static final String UUID_1 = "uuid1";
-    private static final String UUID_2 = "uuid2";
-    private static final String UUID_3 = "uuid3";
-    private static final String UUID_4 = "uuid4";
+    private static final String UUID_1 = UUID.randomUUID().toString();
+    private static final String UUID_2 = UUID.randomUUID().toString();
+    private static final String UUID_3 = UUID.randomUUID().toString();
+    private static final String UUID_4 = UUID.randomUUID().toString();
 
     private static final Resume R1;
     private static final Resume R2;
@@ -91,6 +92,7 @@ public abstract class AbstractStorageTest {
         List<Resume> resumes = storage.getAllSorted();
         assertEquals(3, resumes.size());
         List<Resume> expected = Arrays.asList(R1, R2, R3);
+        Collections.sort(expected);
         Collections.sort(expected);
         assertEquals(expected, resumes);
     }
