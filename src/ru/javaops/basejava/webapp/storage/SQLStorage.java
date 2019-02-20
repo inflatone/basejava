@@ -6,6 +6,7 @@ import ru.javaops.basejava.webapp.model.Resume;
 import ru.javaops.basejava.webapp.sql.SQLHelper;
 
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,27 +28,27 @@ public class SQLStorage implements Storage {
 
     @Override
     public void save(Resume r) {
-        helper.execute(
-                "INSERT INTO resume (uuid, full_name) VALUES (?, ?)",
-                ps -> {
+        helper.transactionalExecute(connection -> {
+            try (PreparedStatement ps = connection.prepareStatement(
+                    "INSERT INTO resume (uuid, full_name) VALUES (?, ?)"
+            )) {
+                ps.setString(1, r.getUuid());
+                ps.setString(2, r.getFullName());
+                ps.execute();
+            }
+            try (PreparedStatement ps = connection.prepareStatement(
+                    "INSERT INTO contact (resume_uuid, type, value) VALUES (?, ?, ?)"
+            )) {
+                for (Map.Entry<ContactType, String> c : r.getContacts().entrySet()) {
                     ps.setString(1, r.getUuid());
-                    ps.setString(2, r.getFullName());
-                    ps.execute();
-                    return null;
+                    ps.setString(2, c.getKey().name());
+                    ps.setString(3, c.getValue());
+                    ps.addBatch();
                 }
-        );
-        for (Map.Entry<ContactType, String> c : r.getContacts().entrySet()) {
-            helper.execute(
-                    "INSERT INTO contact (resume_uuid, type, value) VALUES (?, ?, ?)",
-                    ps -> {
-                        ps.setString(1, r.getUuid());
-                        ps.setString(2, c.getKey().name());
-                        ps.setString(3, c.getValue());
-                        return null;
-                    }
-            );
-        }
-
+                ps.executeBatch();
+            }
+            return null;
+        });
     }
 
     @Override
