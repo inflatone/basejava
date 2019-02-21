@@ -1,9 +1,12 @@
 package ru.javaops.basejava.webapp.sql;
 
 import ru.javaops.basejava.webapp.exception.StorageException;
+import ru.javaops.basejava.webapp.model.ContactType;
+import ru.javaops.basejava.webapp.model.Resume;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
@@ -46,6 +49,22 @@ public class SQLHelper {
             }
         } catch (SQLException e) {
             throw new StorageException(e);
+        }
+    }
+
+    public void addContact(ResultSet rs, Resume resume) throws SQLException {
+        String type = rs.getString("type");
+        if (type != null) {
+            resume.addContact(
+                    ContactType.valueOf(type),
+                    rs.getString("value")
+            );
+        }
+    }
+    
+    public void executePs(Connection connection, String sql, SQLExecutor<Void> executor) throws SQLException {
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            executor.execute(ps);
         }
     }
 }

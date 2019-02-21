@@ -5,9 +5,9 @@ import org.junit.Test;
 import ru.javaops.basejava.webapp.Config;
 import ru.javaops.basejava.webapp.exception.ExistStorageException;
 import ru.javaops.basejava.webapp.exception.NotExistStorageException;
-import ru.javaops.basejava.webapp.model.*;
+import ru.javaops.basejava.webapp.model.ContactType;
+import ru.javaops.basejava.webapp.model.Resume;
 
-import java.time.Month;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -34,9 +34,9 @@ public abstract class AbstractStorageTest {
         R3 = new Resume(UUID_3, "Name3");
         R4 = new Resume(UUID_4, "Name4");
 
-        /*R1.addContact(ContactType.MAIL, "mail1@ya.ru");
+        R1.addContact(ContactType.MAIL, "mail1@ya.ru");
         R1.addContact(ContactType.PHONE, "11111");
-        R1.addSection(SectionType.OBJECTIVE, new TextSection("Objective1"));
+       /* R1.addSection(SectionType.OBJECTIVE, new TextSection("Objective1"));
         R1.addSection(SectionType.PERSONAL, new TextSection("Personal data"));
         R1.addSection(SectionType.ACHIEVEMENT, new ListSection("Achivment11", "Achivment12", "Achivment13"));
         R1.addSection(SectionType.QUALIFICATIONS, new ListSection("Java", "SQL", "JavaScript"));
@@ -50,12 +50,12 @@ public abstract class AbstractStorageTest {
                         new Organization("Institute", null,
                                 new Organization.Position(1996, Month.JANUARY, 2000, Month.DECEMBER, "aspirant", null),
                                 new Organization.Position(2001, Month.MARCH, 2005, Month.JANUARY, "student", "IT facultet")),
-                        new Organization("Organization12", "http://Organization12.ru")));
+                        new Organization("Organization12", "http://Organization12.ru")));*/
 
 
         R2.addContact(ContactType.SKYPE, "skype2");
         R2.addContact(ContactType.PHONE, "22222");
-        R1.addSection(SectionType.EXPERIENCE,
+        /*R1.addSection(SectionType.EXPERIENCE,
                 new OrganizationSection(
                         new Organization("Organization2", "http://Organization2.ru",
                                 new Organization.Position(2015, Month.JANUARY, "position1", "content1"))));*/
@@ -92,7 +92,6 @@ public abstract class AbstractStorageTest {
         List<Resume> resumes = storage.getAllSorted();
         assertEquals(3, resumes.size());
         List<Resume> expected = Arrays.asList(R1, R2, R3);
-        Collections.sort(expected);
         Collections.sort(expected);
         assertEquals(expected, resumes);
     }
