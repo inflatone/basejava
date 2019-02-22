@@ -6,3 +6,7 @@ values ('3b4423fa-c3c7-49f5-bcd5-c76b580bb723', 'Name1'),
 insert into contact (resume_uuid, type, value)
 values ('3b4423fa-c3c7-49f5-bcd5-c76b580bb723', 'PHONE', 123456),
        ('3b4423fa-c3c7-49f5-bcd5-c76b580bb723', 'SKYPE', 'skype');
+
+insert into section (resume_uuid, type, value)
+values ('3b4423fa-c3c7-49f5-bcd5-c76b580bb723', 'OBJECTIVE', 'Objective1'),
+       ('3b4423fa-c3c7-49f5-bcd5-c76b580bb723', 'QUALIFICATIONS', 'Java\nSQL\nJavaScript');

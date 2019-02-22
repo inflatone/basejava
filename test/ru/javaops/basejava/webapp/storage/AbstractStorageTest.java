@@ -5,8 +5,7 @@ import org.junit.Test;
 import ru.javaops.basejava.webapp.Config;
 import ru.javaops.basejava.webapp.exception.ExistStorageException;
 import ru.javaops.basejava.webapp.exception.NotExistStorageException;
-import ru.javaops.basejava.webapp.model.ContactType;
-import ru.javaops.basejava.webapp.model.Resume;
+import ru.javaops.basejava.webapp.model.*;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -38,11 +37,11 @@ public abstract class AbstractStorageTest {
         R1.addContact(ContactType.PHONE, "11111");
         R4.addContact(ContactType.PHONE, "444444");
         R4.addContact(ContactType.SKYPE, "Skype");
-       /* R1.addSection(SectionType.OBJECTIVE, new TextSection("Objective1"));
+        R1.addSection(SectionType.OBJECTIVE, new TextSection("Objective1"));
         R1.addSection(SectionType.PERSONAL, new TextSection("Personal data"));
         R1.addSection(SectionType.ACHIEVEMENT, new ListSection("Achivment11", "Achivment12", "Achivment13"));
         R1.addSection(SectionType.QUALIFICATIONS, new ListSection("Java", "SQL", "JavaScript"));
-        R1.addSection(SectionType.EXPERIENCE,
+        /*R1.addSection(SectionType.EXPERIENCE,
                 new OrganizationSection(
                         new Organization("Organization11", "http://Organization11.ru",
                                 new Organization.Position(2005, Month.JANUARY, "position1", "content1"),

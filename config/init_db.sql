@@ -1,4 +1,5 @@
 drop table if exists contact;
+drop table if exists section;
 drop table if exists resume;
 
 create table resume
@@ -20,3 +21,16 @@ create table contact
 
 create unique index contact_uuid_type_index
   on contact (resume_uuid, type);
+
+create table section
+(
+  id          serial,
+  resume_uuid char(36) not null
+    references resume (uuid)
+      on delete cascade,
+  type        varchar  not null,
+  value       varchar  not null
+);
+
+create unique index section_uuid_type_index
+  on section (resume_uuid, type);
