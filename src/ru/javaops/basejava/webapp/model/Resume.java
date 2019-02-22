@@ -95,4 +95,8 @@ public class Resume implements Comparable<Resume>, Serializable {
     public String toString() {
         return String.format("%s(%s)", uuid, fullName);
     }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
 }
