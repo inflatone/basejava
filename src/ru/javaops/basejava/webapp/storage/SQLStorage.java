@@ -109,23 +109,9 @@ public class SQLStorage implements Storage {
 
     @Override
     public List<Resume> getAllSorted() {
-        final Map<String, Resume> result =  helper.execute(
-                "       SELECT * FROM resume r " +
-                        "LEFT JOIN contact c " +
-                        "       ON r.uuid = c.resume_uuid " +
-                        " ORDER BY r.full_name, r.uuid",
-                ps -> grabResumes(ps.executeQuery())
-        );
-        helper.execute(
-                "SELECT * FROM section s ",
-                ps -> {
-                    ResultSet rs = ps.executeQuery();
-                    while (rs.next()) {
-                        addSection(rs, result.get(rs.getString("resume_uuid")));
-                    }
-                    return null;
-                }
-        );
+        final Map<String, Resume> result = getBareResumes();
+        fillContacts(result);
+        fillSections(result);
         return new ArrayList<>(result.values());
     }
 
@@ -239,17 +225,43 @@ public class SQLStorage implements Storage {
         return Collections.emptyList();
     }
 
-    private Map<String, Resume> grabResumes(ResultSet rs) throws SQLException {
-        Map<String, Resume> map = new LinkedHashMap<>();
-        while (rs.next()) {
-            String uuid = rs.getString("uuid");
-            Resume r = map.get(uuid);
-            if (r == null) {
-                r= new Resume(uuid, rs.getString("full_name"));
-                map.put(uuid, r);
-            }
-            addContact(rs, r);
-        }
-        return map;
+    private Map<String, Resume> getBareResumes() {
+        return helper.execute(
+                "     SELECT * FROM resume r " +
+                        "ORDER BY r.full_name, r.uuid",
+                ps -> {
+                    Map<String, Resume> map = new LinkedHashMap<>();
+                    ResultSet rs = ps.executeQuery();
+                    while (rs.next()) {
+                        String uuid = rs.getString("uuid");
+                        map.put(uuid, new Resume(uuid, rs.getString("full_name")));
+                    }
+                    return map;
+                }
+        );
+    }
+
+    private void fillContacts(Map<String, Resume> map) {
+        fill(map, "SELECT * FROM contact s ", this::addContact);
+    }
+
+    private void fillSections(Map<String, Resume> map) {
+        fill(map, "SELECT * FROM section s ", this::addSection);
+    }
+
+    private void fill(Map<String, Resume> map, String sql, ElementProcessor filler) {
+        helper.execute(
+                sql, ps -> {
+                    ResultSet rs = ps.executeQuery();
+                    while (rs.next()) {
+                        filler.fill(rs, map.get(rs.getString("resume_uuid")));
+                    }
+                    return null;
+                }
+        );
+    }
+
+    private interface ElementProcessor {
+        void fill(ResultSet rs, Resume resume) throws SQLException;
     }
 }
