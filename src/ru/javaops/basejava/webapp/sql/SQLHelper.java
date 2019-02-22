@@ -33,12 +33,13 @@ public class SQLHelper {
         }
     }
 
-    public <T> void transactionalExecute(SQLTransaction<T> executor) {
+    public <T> T transactionalExecute(SQLTransaction<T> executor) {
         try (Connection connection = connectionFactory.getConnection()) {
             try {
                 connection.setAutoCommit(false);
-                executor.execute(connection);
+                T result = executor.execute(connection);
                 connection.commit();
+                return result;
             } catch (SQLException e) {
                 connection.rollback();
                 throw ExceptionUtil.convertException(e);
@@ -48,9 +49,9 @@ public class SQLHelper {
         }
     }
 
-    public void executePreparedStatement(Connection connection, String sql, SQLExecutor<Void> executor) throws SQLException {
+    public <T> T executePreparedStatement(Connection connection, String sql, SQLExecutor<T> executor) throws SQLException {
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            executor.execute(ps);
+            return executor.execute(ps);
         }
     }
 }
