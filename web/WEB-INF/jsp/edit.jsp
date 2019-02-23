@@ -29,7 +29,7 @@
             </dl>
         </c:forEach>
         <hr>
-        <c:forEach var="type" items="${SectionType.values()}">
+        <c:forEach var="type" items="<%=SectionType.values()%>">
             <c:set var="section" value="${resume.getSection(type)}"/>
             <jsp:useBean id="section" type="ru.javaops.basejava.webapp.model.Section"/>
             <h3><a>${type.title}</a></h3>
@@ -53,7 +53,7 @@
                         </dl>
                         <dl>
                             <dt>Сайт учреждения:</dt>
-                            <dd><input type="text" name="${type}_url" size="100" value="${org.homePage.url}"></dd>
+                            <dd><input type="text" name="${type}url" size="100" value="${org.homePage.url}"></dd>
                         </dl>
                         <br>
                         <div style="margin-left: 30px">

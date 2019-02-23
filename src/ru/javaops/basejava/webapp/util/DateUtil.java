@@ -2,6 +2,7 @@ package ru.javaops.basejava.webapp.util;
 
 import java.time.LocalDate;
 import java.time.Month;
+import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 
 /**
@@ -26,5 +27,11 @@ public class DateUtil {
     public static String format(LocalDate date) {
         if (date == null) return "";
         return date.equals(NOW) ? "Сейчас" : date.format(DATE_FORMATTER);
+    }
+
+    public static LocalDate parse(String date) {
+        return HtmlUtil.isEmpty(date) || "Сейчас".equals(date)
+                ? NOW
+                : YearMonth.parse(date, DATE_FORMATTER).atDay(1);
     }
 }

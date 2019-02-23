@@ -41,7 +41,7 @@ public class DataStreamSerializer implements StreamSerializer {
     }
 
     private void readContact(DataInputStream dis, Resume resume) throws IOException {
-        resume.addContact(ContactType.valueOf(dis.readUTF()), dis.readUTF());
+        resume.setContact(ContactType.valueOf(dis.readUTF()), dis.readUTF());
     }
 
     private void writeContact(Map.Entry<ContactType, String> contact, DataOutputStream dos) throws IOException {
@@ -65,7 +65,7 @@ public class DataStreamSerializer implements StreamSerializer {
             case EDUCATION:
                 result = new OrganizationSection(readList(dis, () -> readOrganization(dis)));
         }
-        resume.addSection(type, result);
+        resume.setSection(type, result);
     }
 
     private void writeSection(Map.Entry<SectionType, Section> section, DataOutputStream dos) throws IOException {

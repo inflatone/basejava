@@ -13,4 +13,8 @@ public class HtmlUtil {
     public static String formatDates(Organization.Position position) {
         return DateUtil.format(position.getStartDate()) + " - " + DateUtil.format(position.getEndDate());
     }
+
+    public static boolean isEmpty(String line) {
+        return line == null || line.trim().length() == 0;
+    }
 }
