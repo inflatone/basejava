@@ -65,7 +65,7 @@
                 <c:when test="${type=='EXPERIENCE' || type=='EDUCATION'}">
                     <c:forEach var="org" items="<%=((OrganizationSection) section).getOrganizations()%>">
                         <tr>
-                            <td colspan="2">
+                            <td>
                                 <c:choose>
                                     <c:when test="${empty org.homePage.url}">
                                         <h3>${org.homePage.name}</h3>

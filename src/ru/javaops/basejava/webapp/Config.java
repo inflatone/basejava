@@ -3,8 +3,6 @@ package ru.javaops.basejava.webapp;
 import ru.javaops.basejava.webapp.storage.SQLStorage;
 import ru.javaops.basejava.webapp.storage.Storage;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
@@ -17,13 +15,13 @@ import java.util.Properties;
  * @since 2019-02-18
  */
 public class Config {
-    private static final File PROPS = new File(getHomeDir(), "config/resumes.properties");
+    private static final String PROPS = "/resumes.properties";
     private static final Config INSTANCE = new Config();
     private final String storageDir;
     private final Storage storage;
 
     private Config() {
-        try (InputStream is = new FileInputStream(PROPS)) {
+        try (InputStream is = Config.class.getResourceAsStream(PROPS)) {
             Properties props = new Properties();
             props.load(is);
             storageDir = props.getProperty("storage.dir");
@@ -31,7 +29,7 @@ public class Config {
                     props.getProperty("db.url"), props.getProperty("db.user"), props.getProperty("db.password")
             );
         } catch (IOException e) {
-            throw new IllegalStateException("Invalid config file " + PROPS.getAbsolutePath());
+            throw new IllegalStateException("Invalid config file " + PROPS);
         }
     }
 
@@ -39,14 +37,6 @@ public class Config {
         return INSTANCE;
     }
 
-    private static File getHomeDir() {
-        String prop = System.getProperty("homeDir");
-        File homeDir = new File(prop == null ? "." : prop);
-        if (!homeDir.isDirectory()) {
-            throw new IllegalStateException(homeDir + " is not directory");
-        }
-        return homeDir;
-    }
 
     public String getStorageDir() {
         return storageDir;
