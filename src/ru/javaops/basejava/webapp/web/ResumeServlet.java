@@ -76,10 +76,14 @@ public class ResumeServlet extends HttpServlet {
             case "view":
                 r = storage.get(uuid);
                 break;
+            case "add":
+                r = new Resume("");
+                storage.save(r);
+                prepareSectionsForMapping(r);
+                break;
             case "edit":
                 r = storage.get(uuid);
-                addFirstEmptyOrganizationSections(r);
-                fillEmptySections(r);
+                prepareSectionsForMapping(r);
                 break;
             default:
                 throw new IllegalArgumentException("Action " + action + " is illegal");
@@ -90,18 +94,14 @@ public class ResumeServlet extends HttpServlet {
         ).forward(request, response);
     }
 
-    private void addFirstEmptyOrganizationSections(Resume r) {
-        for (SectionType type : new SectionType[]{SectionType.EXPERIENCE, SectionType.EDUCATION}) {
-            Section section = new OrganizationSection(
-                    getEmptyFirstOrganizations((OrganizationSection) r.getSection(type))
-            );
-            r.setSection(type, section);
-        }
-    }
-
-    private void fillEmptySections(Resume r) {
+    private void prepareSectionsForMapping(Resume r) {
         for (SectionType type : SectionType.values()) {
-            if (r.getSections().get(type) == null) {
+            if (type == SectionType.EXPERIENCE || type == SectionType.EDUCATION) {
+                Section section = new OrganizationSection(
+                        getCompletedWithEmptyField((OrganizationSection) r.getSection(type))
+                );
+                r.setSection(type, section);
+            } else if (r.getSections().get(type) == null) {
                 r.setSection(type, Resume.EMPTY.getSection(type));
             }
         }
@@ -141,7 +141,7 @@ public class ResumeServlet extends HttpServlet {
         return request.getParameterValues(prefix + name);
     }
 
-    private List<Organization> getEmptyFirstOrganizations(OrganizationSection section) {
+    private List<Organization> getCompletedWithEmptyField(OrganizationSection section) {
         List<Organization> result = new ArrayList<>();
         result.add(Organization.EMPTY);
         if (section != null) {

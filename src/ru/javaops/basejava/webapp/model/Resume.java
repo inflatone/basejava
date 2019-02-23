@@ -15,9 +15,8 @@ import java.util.UUID;
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Resume implements Comparable<Resume>, Serializable {
-    private static final long serialVersionUID = 1L;
-
     public static final Resume EMPTY = new Resume();
+    private static final long serialVersionUID = 1L;
 
     static {
         EMPTY.setSection(SectionType.OBJECTIVE, TextSection.EMPTY);
@@ -27,7 +26,6 @@ public class Resume implements Comparable<Resume>, Serializable {
         EMPTY.setSection(SectionType.EXPERIENCE, new OrganizationSection(Organization.EMPTY));
         EMPTY.setSection(SectionType.EDUCATION, new OrganizationSection(Organization.EMPTY));
     }
-
 
     private final Map<ContactType, String> contacts = new EnumMap<>(ContactType.class);
     private final Map<SectionType, Section> sections = new EnumMap<>(SectionType.class);
@@ -58,6 +56,10 @@ public class Resume implements Comparable<Resume>, Serializable {
         return fullName;
     }
 
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
     public Map<ContactType, String> getContacts() {
         return contacts;
     }
@@ -70,12 +72,12 @@ public class Resume implements Comparable<Resume>, Serializable {
         return contacts.get(type);
     }
 
-    public Section getSection(SectionType type) {
-        return sections.get(type);
-    }
-
     public void setContact(ContactType type, String value) {
         contacts.put(type, value);
+    }
+
+    public Section getSection(SectionType type) {
+        return sections.get(type);
     }
 
     public void setSection(SectionType type, Section section) {
@@ -107,9 +109,5 @@ public class Resume implements Comparable<Resume>, Serializable {
     @Override
     public String toString() {
         return String.format("%s(%s)", uuid, fullName);
-    }
-
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
     }
 }
