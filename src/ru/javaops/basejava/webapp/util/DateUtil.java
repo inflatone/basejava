@@ -2,6 +2,7 @@ package ru.javaops.basejava.webapp.util;
 
 import java.time.LocalDate;
 import java.time.Month;
+import java.time.format.DateTimeFormatter;
 
 /**
  * Utility methods for dealing with dates
@@ -12,12 +13,18 @@ import java.time.Month;
  */
 public class DateUtil {
     public static final LocalDate NOW = LocalDate.of(3000, 1, 1);
+    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("MM/yyyy");
 
     public static LocalDate of(int year, Month month) {
         return LocalDate.of(year, month, 1);
     }
 
-    public static LocalDate of (int year, int month) {
+    public static LocalDate of(int year, int month) {
         return LocalDate.of(year, month, 1);
+    }
+
+    public static String format(LocalDate date) {
+        if (date == null) return "";
+        return date.equals(NOW) ? "Сейчас" : date.format(DATE_FORMATTER);
     }
 }
